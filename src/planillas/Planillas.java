@@ -4,6 +4,8 @@
  */
 package planillas;
 
+import planillas.views.Inicio;
+
 /**
  *
  * @author deleo
