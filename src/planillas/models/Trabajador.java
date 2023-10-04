@@ -11,12 +11,10 @@ package planillas.models;
 public class Trabajador {
     private int id;
     private String cui;
-    private int estado_id;
 
-    public Trabajador(int id, String cui, int estado_id) {
+    public Trabajador(int id, String cui) {
         this.id = id;
         this.cui = cui;
-        this.estado_id = estado_id;
     }
 
     public Trabajador() {
@@ -30,21 +28,11 @@ public class Trabajador {
         return cui;
     }
 
-    public int getEstado_id() {
-        return estado_id;
-    }
-
     public void setId(int id) {
         this.id = id;
     }
 
     public void setCui(String cui) {
         this.cui = cui;
-    }
-
-    public void setEstado_id(int estado_id) {
-        this.estado_id = estado_id;
-    }
-    
-    
+    }    
 }

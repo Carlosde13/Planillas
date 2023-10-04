@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import planillas.models.Planilla_trabajador;
+import planillas.models.Trabajador;
 
 /**
  *
@@ -17,9 +18,32 @@ import planillas.models.Planilla_trabajador;
  */
 public class ArchivoController {
     
-    public static List<Planilla_trabajador> leerArchivo(String rutaArchivo, int planilla_id) {
+    private boolean exito;
+    private String errorMessage;
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setExito(boolean exito) {
+        this.exito = exito;
+    }
+
+    public boolean getExito() {
+        return exito;
+    }
+    
+    public  List<Planilla_trabajador> leerArchivo(String rutaArchivo, int planilla_id) {
         List<Planilla_trabajador> registros = new ArrayList<>();
 
+        TrabajadorController trabajadorController = new TrabajadorController();
+        
+        setExito(true);
+        setErrorMessage("");
         try {
             // Abre el archivo y prepara el BufferedReader
             BufferedReader br = new BufferedReader(new FileReader(rutaArchivo));
@@ -39,11 +63,24 @@ public class ArchivoController {
                         Planilla_trabajador registro = new Planilla_trabajador(planilla_id, trabajador_id, sueldo, estado_id);
                         registros.add(registro);
                         System.out.println("Se leyo el registro");
+                        
+                        Trabajador trabajador = new Trabajador ();
+                        
+                        trabajador = trabajadorController.getById(trabajador_id);
+                        
+                        if(trabajador == null){
+                            setExito(false);
+                            setErrorMessage("Error en la linea: " + linea+"\nno se existe un trabajador con este ID");
+                        }
                     } catch (NumberFormatException e) {
                         System.err.println("Error al parsear valores en la línea: " + linea);
+                        setExito(false);
+                        setErrorMessage("Error al convertir valores en la línea: " + linea+"\nVerifique el archivo e intente de nuevo");
                     }
                 } else {
-                    System.err.println("Línea incorrecta: " + linea);
+                    System.err.println("Línea con formato incorrecto: " + linea);
+                    setExito(false);
+                    setErrorMessage("Línea con formato incorrecto: " + linea);
                 }
             }
 

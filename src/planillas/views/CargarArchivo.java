@@ -180,6 +180,14 @@ public class CargarArchivo extends javax.swing.JFrame {
             
             
             registros = ac.leerArchivo(this.direccionArchivo, this.planilla.getId());
+            
+            if(ac.getExito() == false){
+                JOptionPane.showMessageDialog(this,ac.getErrorMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }else{
+                ConfirmacionArchivo ca = new ConfirmacionArchivo(this.empresa, this.planilla, this.direccionArchivo, registros);
+                ca.setVisible(true);
+                dispose();
+            }
         }
     }//GEN-LAST:event_cargarBtnActionPerformed
 

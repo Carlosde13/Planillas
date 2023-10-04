@@ -11,10 +11,20 @@ package planillas.models;
 public class Empresa {
     private int id;
     private String nombre;
+    private String cod_planilla;
 
-    public Empresa(int id, String nombre) {
+    public Empresa(int id, String nombre, String cod_planilla) {
         this.id = id;
         this.nombre = nombre;
+        this.cod_planilla = cod_planilla;
+    }
+
+    public void setCod_planilla(String cod_planilla) {
+        this.cod_planilla = cod_planilla;
+    }
+
+    public String getCod_planilla() {
+        return cod_planilla;
     }
 
     public Empresa() {
