@@ -11,6 +11,7 @@ package planillas.models;
 public class Estado {
     private int id;
     private String descripcion;
+    private String inicial;
 
     public Estado(int id, String descripcion) {
         this.id = id;
@@ -18,6 +19,14 @@ public class Estado {
     }
 
     public Estado() {
+    }
+
+    public void setInicial(String inicial) {
+        this.inicial = inicial;
+    }
+
+    public String getInicial() {
+        return inicial;
     }
 
     public int getId() {

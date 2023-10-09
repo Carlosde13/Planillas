@@ -23,7 +23,7 @@ public class CargarArchivo extends javax.swing.JFrame {
      */
     Empresa empresa = new Empresa();
     Planilla planilla = new Planilla();
-    
+
     private String direccionArchivo;
 
     public String getDireccionArchivo() {
@@ -34,22 +34,36 @@ public class CargarArchivo extends javax.swing.JFrame {
         this.direccionArchivo = direccionArchivo;
         this.lblArchivoURL.setText(direccionArchivo);
     }
-    
+
     public CargarArchivo() {
         initComponents();
         setLocationRelativeTo(null);
         setTitle("Nueva Empresa");
     }
+
     public CargarArchivo(Empresa e, Planilla p) {
         initComponents();
         setLocationRelativeTo(null);
         setTitle("Subir archivo de planilla");
-        
+
         this.empresa = e;
         this.planilla = p;
-        
+
         this.lblEmpresa.setText(e.getNombre());
         setDireccionArchivo("");
+    }
+
+    public CargarArchivo(Empresa e, Planilla p, String url) {
+        initComponents();
+        setLocationRelativeTo(null);
+        setTitle("Subir archivo de planilla");
+
+        this.empresa = e;
+        this.planilla = p;
+
+        this.lblEmpresa.setText(e.getNombre());
+        setDireccionArchivo(url);
+        this.lblArchivoURL.setText(url);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -171,19 +185,31 @@ public class CargarArchivo extends javax.swing.JFrame {
 
     private void cargarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cargarBtnActionPerformed
         // TODO add your handling code here:
-        
-        if(this.direccionArchivo == ""){
-            JOptionPane.showMessageDialog(this,"Debe seleccionar un archivo", "Error", JOptionPane.ERROR_MESSAGE);
-        }else{
+
+        if (this.direccionArchivo == "") {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un archivo", "Error", JOptionPane.ERROR_MESSAGE);
+        } else {
             ArchivoController ac = new ArchivoController();
             List<Planilla_trabajador> registros = new ArrayList<>();
-            
-            
-            registros = ac.leerArchivo(this.direccionArchivo, this.planilla.getId());
-            
-            if(ac.getExito() == false){
-                JOptionPane.showMessageDialog(this,ac.getErrorMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }else{
+
+            registros = ac.leerArchivo(this.direccionArchivo, this.planilla, this.empresa.getId());
+
+            if (ac.getExito() == false) {
+                if (ac.getAgregarTrabajador() == true) {
+
+                    int opcion = JOptionPane.showConfirmDialog(this, "No existe un trabajador con este ID\n¿Desea agregar un nuevo trabajador?", "Confirmación", JOptionPane.YES_NO_OPTION);
+
+                    if (opcion == JOptionPane.YES_OPTION) {
+                        NuevoTrabajador nt = new NuevoTrabajador(this.empresa, this.planilla, this.direccionArchivo, ac.getCuiInexistente());
+                        nt.setVisible(true);
+                        dispose();
+                    } else {
+                        System.out.println("Eligio NO");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, ac.getErrorMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
                 ConfirmacionArchivo ca = new ConfirmacionArchivo(this.empresa, this.planilla, this.direccionArchivo, registros);
                 ca.setVisible(true);
                 dispose();

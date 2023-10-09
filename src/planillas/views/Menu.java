@@ -64,6 +64,11 @@ public class Menu extends javax.swing.JFrame {
 
         reportesBtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         reportesBtn.setText("Reportes");
+        reportesBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reportesBtnActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Que desea hacer el dia de hoy?");
 
@@ -113,6 +118,13 @@ public class Menu extends javax.swing.JFrame {
         np.show();
         dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void reportesBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reportesBtnActionPerformed
+        // TODO add your handling code here:
+        Reportes reportes = new Reportes (this.empresa);
+        reportes.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_reportesBtnActionPerformed
 
     /**
      * @param args the command line arguments

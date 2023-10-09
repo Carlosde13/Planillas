@@ -106,4 +106,52 @@ public class PlanillaController {
 
         return planilla;
     }
+    public static Planilla getById(int id_planilla) {
+        Connection connection = Conexion.conexion();
+        Planilla planilla = null;
+
+        if (connection != null) {
+            PreparedStatement statement = null;
+            ResultSet resultSet = null;
+
+            try {
+                String query = "SELECT * FROM PLANILLA WHERE id = ?";
+                
+                statement = connection.prepareStatement(query);
+                
+                statement.setInt(1, id_planilla);
+                
+                resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+                    
+                    int id = resultSet.getInt("id");
+                    int year = resultSet.getInt("anio");
+                    int month = resultSet.getInt("mes");
+                    int company_id = resultSet.getInt("empresa_id");
+                    
+                    
+
+                    planilla = new Planilla(id, year, month, company_id);
+                    
+                }
+            } catch (SQLException e) {
+                System.out.println("Error en la consulta: " + e.getMessage());
+            } finally {
+                try {
+                    if (resultSet != null) {
+                        resultSet.close();
+                    }
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    connection.close();
+                } catch (SQLException e) {
+                    System.out.println("Error al cerrar la conexión: " + e.getMessage());
+                }
+            }
+        }
+
+        return planilla;
+    }
 }
