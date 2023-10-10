@@ -139,6 +139,49 @@ public class ConsultasEmpresa {
         return empresa;
     }
     
+    public static Empresa getByCodPlanilla(String cod) {
+        Connection connection = Conexion.conexion();
+        Empresa empresa = null;
+
+        if (connection != null) {
+            PreparedStatement statement = null;
+            ResultSet resultSet = null;
+
+            try {
+                String query = "SELECT * FROM EMPRESA WHERE cod_planilla = ?";
+                statement = connection.prepareStatement(query);
+                statement.setString(1, cod);
+                resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+                    int empresaID = resultSet.getInt("id");
+                    String nombre = resultSet.getString("nombre");
+                    String cod_planilla = resultSet.getString("cod_planilla");
+
+                    empresa = new Empresa();
+                    empresa.setId(empresaID);
+                    empresa.setNombre(nombre);
+                }
+            } catch (SQLException e) {
+                System.out.println("Error en la consulta: " + e.getMessage());
+            } finally {
+                try {
+                    if (resultSet != null) {
+                        resultSet.close();
+                    }
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    connection.close();
+                } catch (SQLException e) {
+                    System.out.println("Error al cerrar la conexión: " + e.getMessage());
+                }
+            }
+        }
+
+        return empresa;
+    }
+    
     public static boolean setCodigo(String codigo, int id_empresa) {
         Connection connection = Conexion.conexion();
 

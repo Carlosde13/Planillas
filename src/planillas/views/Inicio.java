@@ -27,23 +27,7 @@ public class Inicio extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setTitle("Sistema de Planillas");
         
-        AbstractDocument doc = (AbstractDocument) tfEmpresaID.getDocument();
-        doc.setDocumentFilter(new DocumentFilter() {
-            @Override
-            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
-                StringBuilder sb = new StringBuilder();
-                sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
-                sb.replace(offset, offset + length, text);
-
-                if (isValidNumber(sb.toString())) {
-                    super.replace(fb, offset, length, text, attrs);
-                }
-            }
-
-            private boolean isValidNumber(String text) {
-                return text.matches("\\d*"); // Solo números enteros
-            }
-        });
+        
     }
     
     /**
@@ -59,13 +43,20 @@ public class Inicio extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         tfEmpresaID = new javax.swing.JTextField();
         continuarBtn = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Comic Sans MS", 1, 19)); // NOI18N
         jLabel1.setText("Bienvenido al Sistema de Planillas");
 
-        jLabel2.setText("Ingrese el ID de su empresa para continuar");
+        jLabel2.setText("Ingrese el ID o código de planilla asignado a");
+
+        tfEmpresaID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfEmpresaIDActionPerformed(evt);
+            }
+        });
 
         continuarBtn.setText("Continuar");
         continuarBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -73,6 +64,8 @@ public class Inicio extends javax.swing.JFrame {
                 continuarBtnActionPerformed(evt);
             }
         });
+
+        jLabel3.setText("su empresa para continuar");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -84,13 +77,17 @@ public class Inicio extends javax.swing.JFrame {
                         .addGap(26, 26, 26)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(62, 62, 62)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(120, 120, 120)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(tfEmpresaID)
-                            .addComponent(continuarBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE))))
+                            .addComponent(continuarBtn, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(62, 62, 62)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(45, 45, 45)
+                                .addComponent(jLabel3)))))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -98,11 +95,13 @@ public class Inicio extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addComponent(jLabel1)
-                .addGap(39, 39, 39)
+                .addGap(47, 47, 47)
                 .addComponent(jLabel2)
-                .addGap(30, 30, 30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel3)
+                .addGap(18, 18, 18)
                 .addComponent(tfEmpresaID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
+                .addGap(26, 26, 26)
                 .addComponent(continuarBtn)
                 .addContainerGap(66, Short.MAX_VALUE))
         );
@@ -110,18 +109,31 @@ public class Inicio extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private static boolean contieneSoloNumeros(String texto) {
+        // Utiliza una expresión regular para verificar si el texto contiene solo números
+        return texto.matches("[0-9]+");
+    }
     private void continuarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continuarBtnActionPerformed
         // TODO add your handling code here:
         
         if(this.tfEmpresaID.getText().isBlank()){
-            JOptionPane.showMessageDialog(this,"Ingrese el número de la empresa", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,"Ingrese el ID o código de planilla de su empresa", "Error", JOptionPane.ERROR_MESSAGE);
         }else{
-            int id = Integer.parseInt(this.tfEmpresaID.getText());
+            int id;
+            String codigo;
             ConsultasEmpresa consulta = new ConsultasEmpresa();
+            Empresa empresa = null;
             
-            Empresa empresa;
-            empresa = consulta.getById(id);
-            
+            if(contieneSoloNumeros(this.tfEmpresaID.getText())){
+                
+                id = Integer.parseInt(this.tfEmpresaID.getText());
+                empresa = consulta.getById(id);
+            }else{
+                codigo = this.tfEmpresaID.getText();
+                
+                empresa = consulta.getByCodPlanilla(codigo);
+            }
+
             if(empresa != null){
                 Menu menu = new Menu (empresa);
                 menu.show();
@@ -133,6 +145,10 @@ public class Inicio extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_continuarBtnActionPerformed
+
+    private void tfEmpresaIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfEmpresaIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfEmpresaIDActionPerformed
 
     /**
      * @param args the command line arguments
@@ -173,6 +189,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JButton continuarBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JTextField tfEmpresaID;
     // End of variables declaration//GEN-END:variables
 }
