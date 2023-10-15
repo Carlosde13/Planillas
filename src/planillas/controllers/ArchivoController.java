@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package planillas.controllers;
 
 import java.io.BufferedReader;
@@ -89,45 +85,41 @@ public class ArchivoController {
                         Trabajador trabajador = new Trabajador();
                         trabajador = trabajadorController.getByCUI(persona_cui);
 
-                        int idTrabajador=0;
+                        int idTrabajador = 0;
 
                         Estado estado = new Estado();
                         estado = estadoController.getByInicial(estado_inicial);
-                        int idEstado=0;
+                        int idEstado = 0;
 
                         if (trabajador != null && estado != null) {
-                            if(trabajador != null){
-                                idTrabajador = trabajador.getId();
-                                if (trabajadores_leidos.contains(persona_cui)) {
+                            idTrabajador = trabajador.getId();
+                            if (trabajadores_leidos.contains(persona_cui)) {
+                                setExito(false);
+                                setErrorMessage("Error en la linea: " + linea + "\nEl CUI del trabajador aparece mas de una vez en la planilla de este mes");
+                            } else {
+                                trabajadores_leidos.add(persona_cui);
+                            }
+
+                            idEstado = estado.getId();
+                            if (idEstado == 2) {
+                                sueldo = (float) 0.00;
+                            }
+                            int deAlta = verificacionesController.verificarAlta(trabajador.getId());
+
+                            if (idEstado != 1) {
+                                if (deAlta == 0) {
                                     setExito(false);
-                                    setErrorMessage("Error en la linea: " + linea + "\nEl CUI del trabajador aparece mas de una vez en la planilla de este mes");
-                                } else {
-                                    trabajadores_leidos.add(persona_cui);
+                                    setErrorMessage("Error en la linea: " + linea + "\nEl Empleado no aparece dado de alta ninguna vez");
+                                }
+                            } else if (idEstado == 1) {
+                                int existeAlta = verificacionesController.verificarAltaExistente(trabajador.getId(), empresaID);
+
+                                if (existeAlta > 0) {
+                                    setExito(false);
+                                    setErrorMessage("Error en la linea: " + linea + "\nEl Empleado ya ha sido dado de alta anteriormente");
                                 }
                             }
-
-                            if(estado != null){
-                                idEstado = estado.getId();
-                                if (idEstado == 2) {
-                                    sueldo = (float) 0.00;
-                                }
-                                int deAlta = verificacionesController.verificarAlta(trabajador.getId());
-
-                                if (idEstado != 1) {
-                                    if (deAlta == 0) {
-                                        setExito(false);
-                                        setErrorMessage("Error en la linea: " + linea + "\nEl Empleado no aparece dado de alta ninguna vez");
-                                    }
-                                } else if (idEstado == 1) {
-                                    int existeAlta = verificacionesController.verificarAltaExistente(trabajador.getId(), empresaID);
-
-                                    if (existeAlta > 0) {
-                                        setExito(false);
-                                        setErrorMessage("Error en la linea: " + linea + "\nEl Empleado ya ha sido dado de alta anteriormente");
-                                    }
-                                }
-                            }
-                        }else{
+                        } else {
                             if (trabajador == null) {
                                 idTrabajador = 0;
                                 setExito(false);

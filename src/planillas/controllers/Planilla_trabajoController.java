@@ -1,14 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package planillas.controllers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import planillas.database.Conexion;
 import static planillas.database.Conexion.conexion;
@@ -95,40 +90,5 @@ public class Planilla_trabajoController {
             setErrorMessage("Error al conectar");
         }
     }
-    
-    // public static List<String[]> verificaciones() {
-//         List<String[]> resultados = new ArrayList<>();
-//         Connection connection = Conexion.conexion();
-
-//         if (connection != null) {
-//             try {
-//                 Statement statement = connection.createStatement();
-//                 String query = "SELECT * FROM Alumnos";
-//                 ResultSet resultSet = statement.executeQuery(query);
-
-//                 while (resultSet.next()) {
-//                     int id = resultSet.getInt("ID");
-//                     String columna2 = resultSet.getString("NOMBRE");
-//                     String columna3 = resultSet.getString("EDAD");
-
-//                     String[] fila = {String.valueOf(id), columna2, columna3};
-//                     resultados.add(fila);
-//                 }
-
-//                 resultSet.close();
-//                 statement.close();
-//             } catch (SQLException e) {
-//                 System.out.println("Error en la consulta: " + e.getMessage());
-//             } finally {
-//                 try {
-//                     connection.close();
-//                 } catch (SQLException e) {
-//                     System.out.println("Error al cerrar la conexión: " + e.getMessage());
-//                 }
-//             }
-//         }
-        
-//         return resultados;
-//     }
 }
 
